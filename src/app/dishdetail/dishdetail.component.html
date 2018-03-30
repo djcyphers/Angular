@@ -37,34 +37,43 @@
             <span>--{{ comment.author}} {{comment.date | date: 'MMM. dd, yyyy'}}</span>
           </p>
       </md-list-item>
-      <!-- Comment Form -->
-      <form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()">
-       <p>
-        <md-input-container class="full-width" dividerColor="{{(formErrors.author) ? 'warn' : 'primary'}}">
-          <input mdInput formControlName="author" placeholder="Name" type="text" required>
-          <md-hint>
-            <span [hidden]="!(formErrors.author)">
-              {{formErrors.author}}</span>
-          </md-hint>
-        </md-input-container>
-        </p>
-        <!-- Slider -->
-        <p>
-          <md-slider min="1" max="5" thumbLabel tickInterval="1"></md-slider>
-        </p>
-        <!-- Comments -->
-        <p>
-          <md-input-container class="full-width">
-            <textarea mdInput formControlName="comment" placeholder="Comments" rows=12></textarea>
-            <md-hint>
-              <span [hidden]="!(formErrors.comment)">{{formErrors.comment}}</span>
-            </md-hint>
-          </md-input-container>
-        </p>
-          <button type="submit" md-button class="background-primary text-floral-white" [disabled]="commentForm.invalid">Submit</button>
-      </form>
-
     </md-list>
+    <!-- Comment Form -->
+    <form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+        
+      <md-list>
+        <md-list-item>
+            <h4 md-line> {{ commentForm.value.comment }} </h4>
+            <p md-line> {{ commentForm.value.rating}} Stars </p>
+            <p md-line>
+              <span>--{{ commentForm.value.author }}</span>
+            </p>
+        </md-list-item>
+      </md-list>
+        <p>
+         <md-input-container class="full-width" dividerColor="{{(formErrors.author) ? 'warn' : 'primary'}}">
+           <input mdInput formControlName="author" placeholder="Name" rows="12" type="text" required>
+           <md-hint>
+             <span [hidden]="!(formErrors.author)">
+               {{formErrors.author}}</span>
+           </md-hint>
+         </md-input-container>
+         </p>
+         <!-- Slider -->
+         <p>
+           <md-slider mdInput formControlName="rating" min="1" max="5" step="1" value="5" thumbLabel tickInterval="1"></md-slider>
+         </p>
+         <!-- Comments -->
+         <p>
+           <md-input-container class="full-width">
+             <textarea mdInput formControlName="comment" placeholder="Comments" rows=12></textarea>
+             <md-hint>
+               <span [hidden]="!(formErrors.comment)">{{formErrors.comment}}</span>
+             </md-hint>
+           </md-input-container>
+         </p>
+           <button type="submit" md-button class="background-primary text-floral-white" [disabled]="commentForm.invalid">Submit</button>
+       </form>
   </div>
   <div [hidden]="dish">
       <md-spinner></md-spinner><h4>Loading . . . Please Wait</h4>

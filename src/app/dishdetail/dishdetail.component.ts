@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
+import { Comment } from '../shared/comment';
 
 import { Params, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -19,6 +20,7 @@ export class DishdetailComponent implements OnInit {
   prev: number;
   next: number;
   commentForm: FormGroup;
+  comment: Comment;
 
   formErrors = {
     'author': '',
@@ -45,7 +47,7 @@ export class DishdetailComponent implements OnInit {
       author: ['', Validators.required ],
       comment: ['', Validators.required ],
       rating: '',
-      message: ''
+      date: ''
     });
 
     this.commentForm.valueChanges
@@ -71,24 +73,26 @@ export class DishdetailComponent implements OnInit {
   }
 
   onSubmit() {
-    this.commentForm = this.fb.group({
-      author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
-      comment: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
-      agree: false,
+    this.comment = this.commentForm.value;
+    this.comment.date = new Date().toISOString();
+    this.dish.comments.push(this.comment);
+    this.commentForm.reset({
+      rating: 5,
+      author: '',
+      comment: ''
     });
   }
 
   
 
   validationMessages = {
-    'author': {
-      'required':      'Name is required.',
-      'minlength':     'Name must be at least 2 characters long.',
-      'maxlength':     'Name cannot be more than 25 characters long.'
-    },
+    'rating': {},
     'comment': {
-      'required':      'Comment is required.',
-      'minlength':     'Comment must be at least 2 characters long.'
+      'required':      'A comment is required.'
+    },
+    'author': {
+      'required':      'A name is required.',
+      'minlength':     'Name must be at least 2 characters long.'
     },
   };
 
