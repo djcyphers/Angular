@@ -1,7 +1,6 @@
 <div class="container" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign.gt-md="space-around center" fxLayoutGap="10px" fxLayoutGap.xs="0">
 
-  <div fxFlex="40">
-    <div fxFlex *ngIf="dish">
+  <div fxFlex="40" *ngIf="dish" [@visibility]="visibility">
         <md-card>
           <md-card-header>
             <md-card-title>
@@ -21,7 +20,6 @@
             <button md-button [routerLink]="['/dishdetail', next]"><span class="fa fa-chevron-right fa-lg"></span></button>
           </md-card-actions>
         </md-card>
-      </div>
       <div [hidden]="dish || errMess">
           <md-spinner></md-spinner><h4>Loading . . . Please Wait</h4>
       </div>
@@ -31,9 +29,9 @@
       </div>
   </div>
 
-  <div fxFlex="40">
-    <h3>Comments</h3>
-    <md-list *ngIf="dish">
+  <div fxFlex="40" *ngIf="dish" [@visibility]="visibility">
+    <md-list>
+      <h3>Comments</h3>
       <md-list-item *ngFor="let comment of dish.comments">
           <h4 md-line> {{ comment.comment }} </h4>
           <p md-line> {{ comment.rating }} Stars </p>
