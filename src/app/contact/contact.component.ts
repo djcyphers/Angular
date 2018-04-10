@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
+import { FeedbackService } from '../services/feedback.service';
 import { flyInOut } from '../animations/app.animation';
 
 @Component({
@@ -17,10 +18,13 @@ import { flyInOut } from '../animations/app.animation';
 })
 
 export class ContactComponent implements OnInit {
-
   feedbackForm: FormGroup;
   feedback: Feedback;
+  feedbackcopy = null;
   contactType = ContactType;
+  showmainform = true;
+  showspinner = false;
+  showfeedback = false;
   formErrors = {
     'firstname': '',
     'lastname': '',
@@ -28,7 +32,8 @@ export class ContactComponent implements OnInit {
     'email': ''
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private feedbackservice: FeedbackService,
+    private fb: FormBuilder) {
     this.createForm();
   }
 
@@ -68,12 +73,40 @@ export class ContactComponent implements OnInit {
     }
   }
 
+  formPhases (part: number){
+    if (part == 1){
+      this.showmainform = false;
+      this.showspinner = true;
+      this.showfeedback = false;
+    }
+    else if (part == 2){
+      this.showmainform = false;
+      this.showspinner = false;
+      this.showfeedback = true;
+    }
+    else if (part == 3){
+      this.showmainform = true;
+      this.showspinner = false;
+      this.showfeedback = false;
+    }
+  }
+
   onSubmit() {
-    this.feedbackForm = this.fb.group({
-      firstname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
-      lastname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)] ],
-      telnum: ['', [Validators.required, Validators.pattern] ],
-      email: ['', [Validators.required, Validators.email] ],
+    this.feedback = this.feedbackForm.value;
+    this.formPhases(1);
+    
+    this.feedbackservice.submitFeedback(this.feedback)
+      .subscribe(responsefeedback => {
+        this.feedbackcopy = responsefeedback; 
+        this.formPhases(2);
+        setTimeout(() => this.formPhases(3), 5000);
+      });
+
+    this.feedbackForm.reset({
+      firstname: '',
+      lastname: '',
+      telnum: '',
+      email: '',
       agree: false,
       contacttype: 'None',
       message: ''
